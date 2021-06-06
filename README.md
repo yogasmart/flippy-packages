@@ -9,5 +9,5 @@
 # 感谢
  
  * [flippy](https://github.com/unifreq/openwrt_packit)
- * [mingxiaoyu](https://github.com/mingxiaoyu/N1Openwrt)
+ * [mingxiaoyu](https://github.com/mingxiaoyu/flippy-packages)
 
