@@ -146,12 +146,6 @@ cd $TGT_ROOT
 if [ -f etc/config/cpufreq ];then
     sed -e "s/ondemand/schedutil/" -i etc/config/cpufreq
 fi
-if [ -f etc/init.d/dockerd ] && [ -f $DOCKERD_PATCH ];then
-    patch -p1 < $DOCKERD_PATCH
-fi
-if [ -f usr/bin/xray-plugin ] && [ -f usr/bin/v2ray-plugin ];then
-   ( cd usr/bin && rm -f v2ray-plugin && ln -s xray-plugin v2ray-plugin )
-fi
 
 mv -f ./etc/modules.d/brcm* ./etc/modules.d.remove/ 2>/dev/null
 mod_blacklist=$(cat ${KMOD_BLACKLIST})
@@ -167,6 +161,7 @@ fi
 echo "r8188eu" > ./etc/modules.d/rtl8188eu
 echo "sunxi_wdt" > ./etc/modules.d/watchdog
 
+adjust_docker_config
 adjust_openssl_config
 adjust_qbittorrent_config
 adjust_getty_config
@@ -174,23 +169,16 @@ adjust_samba_config
 adjust_nfs_config "mmcblk0p4"
 adjust_openssh_config
 adjust_openclash_config
+use_xrayplug_replace_v2rayplug
 
 # for collectd
 # [ -f ./etc/ppp/options-opkg ] && mv ./etc/ppp/options-opkg ./etc/ppp/options
 
 chmod 755 ./etc/init.d/*
 
-sed -e "s/option wan_mode 'false'/option wan_mode 'true'/" -i ./etc/config/dockerman 2>/dev/null
-mv -f ./etc/rc.d/S??dockerd ./etc/rc.d/S99dockerd 2>/dev/null
 rm -f ./etc/rc.d/S80nginx 2>/dev/null
 
 create_fstab_config
-
-rm -f ./etc/bench.log
-cat >> ./etc/crontabs/root << EOF
-17 3 * * * /etc/coremark.sh
-EOF
-
 adjust_turboacc_config
 adjust_ntfs_config
 patch_admin_status_index_html
