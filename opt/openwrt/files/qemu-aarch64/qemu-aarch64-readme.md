@@ -322,6 +322,7 @@ virsh list   # 显示已启动的虚拟机， 如果要显示所有虚机，用 
 virsh edit vm_name  # 修改虚拟机的配置文件(/etc/libvirt/qemu/vm_name.xml)，有些更改会立即生效，而大多数更改需关闭虚拟机后才生效，此功能不建议初学者使用
 virsh console vm_name # 连接到虚拟机的控制台(/dev/ttyAMA0), 可执行 shell 命令， 类似于 docker exec -it container bash 的功能
 virsh start vm_name  # 启动虚拟机
+virsh start --console vm_name  # 启动虚拟机，同时连接到虚拟机控制台
 virsh reboot vm_name # 重启虚拟机，需要虚拟机中有 acpid 服务的支持，否则此命令无效。 建议在固件底包中加入 acpid
 virsh shutdown vm_name  # 正常停止虚拟机，需要虚拟机中有 acpid 服务的支持，否则此命令无效。 建议在固件底包中加入 acpid
 virsh destroy vm_name # 强行停止虚拟机
@@ -491,7 +492,7 @@ Set the rps cpu mask of eth1 to 0x1e
   
 ## 7. 固件升级
 
-每次固件发布会有2个文件：`openwrt_qemu-aarch64_generic_vm_k5.18.13-flippy-75+.img` 和 `openwrt_qemu-aarch64_generic_vm_k5.18.13-flippy-75+.qcow2`
+每次固件发布会有2个文件, 例如：`openwrt_qemu-aarch64_generic_R22.7.7_k5.18.15-flippy-75+_update.img` 和 `openwrt_qemu-aarch64_R22.7.7_k5.18.15-flippy-75+.qcow2`
 其中，后缀为.qcow2的文件是首次创建虚拟机用的，而另一个后缀为.img的文件就用于升级的。
 
 ### 7.1 命令行升级方法
