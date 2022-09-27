@@ -18,6 +18,7 @@ our $usb_as_eth1 = 0;
 &read_irq_data();
 &update_smp_affinity();
 &enable_eth_rps_rfs();
+&board_special_config();
 exit(0);
 
 ############################## sub functions #########################
@@ -200,4 +201,24 @@ sub enable_eth_rps_rfs {
     open my $fh, ">", "/proc/sys/net/core/rps_sock_flow_entries" or die;
     print $fh $rps_sock_flow_entries;
     close $fh;
+}
+
+sub get_boardinfo() {
+    my $ret="unknown";
+    if(-f "/proc/device-tree/model") {
+         open my $fh, "<", "/proc/device-tree/model" or warn $!;
+	 read $fh, $ret, 100;
+	 close $fh;
+	 $ret =~ s/\0//;
+    }
+    return $ret;
+}
+
+sub board_special_config() {
+    my $board = &get_boardinfo();
+    if($board eq "FastRhino R68S") {
+        &tunning_eth_ring("eth2", 256, 256);
+    } elsif($board eq "FastRhino R66S") {
+        &tunning_eth_ring("eth0", 256, 256);
+    }
 }
